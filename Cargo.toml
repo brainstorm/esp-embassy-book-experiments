@@ -45,8 +45,10 @@ smoltcp = { version = "0.12.0", default-features = false, features = [
   "socket-tcp",
   "socket-udp",
 ] }
-static_cell = "2.1.1"
+static_cell = "2"
 esp-println = { version = "0.15.0", features = ["esp32c6"] }
+embassy-sync = "0.7"
+#assign-resources = "0.4"
 
 
 [profile.dev]
