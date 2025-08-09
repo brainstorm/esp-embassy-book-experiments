@@ -6,9 +6,10 @@
     holding buffers for the duration of a data transfer."
 )]
 
-use embassy_sync::channel::Channel;
+//use embassy_sync::channel::Channel;
 use embassy_executor::Spawner;
 use esp_hal::clock::CpuClock;
+use esp_hal_embassy;
 use esp_embassy_channels::tasks;
 
 #[panic_handler]
@@ -30,7 +31,9 @@ async fn main(spawner: Spawner) {
 
     esp_alloc::heap_allocator!(size: 64 * 1024);
 
-    let uart = tasks::uart::Uart { uart: peripherals.UART0 };
+    let uart = tasks::uart::Uart {
+        uart: peripherals.UART0
+    };
     let wifi = tasks::wifi::Wifi {
         radio: peripherals.WIFI,
         timg0: peripherals.TIMG0,
@@ -40,8 +43,8 @@ async fn main(spawner: Spawner) {
 
     // Spawn all tasks
     spawner.spawn(tasks::uart::init(uart)).unwrap();
-    spawner.spawn(tasks::uart::run(uart)).unwrap();
+    // spawner.spawn(tasks::uart::run(uart)).unwrap();
 
     spawner.spawn(tasks::wifi::init(wifi)).unwrap();
-    spawner.spawn(tasks::wifi::run(wifi)).unwrap();
+    // spawner.spawn(tasks::wifi::run(wifi)).unwrap();
 }

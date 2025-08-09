@@ -1,7 +1,6 @@
 use esp_println::println;
 use esp_hal::peripherals;
 use esp_hal::timer::systimer::SystemTimer;
-use esp_hal::timer::timg::TimerGroup;
 
 pub struct Wifi<'a> {
     pub radio: peripherals::WIFI<'a>,
@@ -16,11 +15,9 @@ pub async fn init(wifi: Wifi<'static>) {
         let timer0 = SystemTimer::new(wifi.systimer);
     esp_hal_embassy::init(timer0.alarm0);
 
-    let rng = esp_hal::rng::Rng::new(wifi.rng);
-    let timer1 = TimerGroup::new(wifi.timg0);
     let wifi_init =
-        esp_wifi::init(timer1.timer0, rng).expect("Failed to initialize WIFI/BLE controller");
-    let (mut _wifi_controller, _interfaces) = esp_wifi::wifi::new(&wifi_init, wifi.radio)
+        esp_radio::init().expect("Failed to initialize WIFI/BLE controller");
+    let (mut _wifi_controller, _interfaces) = esp_radio::wifi::new(&wifi_init, wifi.radio)
         .expect("Failed to initialize WIFI controller");
 }
 

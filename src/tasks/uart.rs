@@ -10,7 +10,6 @@ pub async fn init(_uart: Uart<'static>) {
     println!("UART task started");
 }
 
-// Why can't I pub(crate) here instead of pub?
 #[embassy_executor::task()]
 pub async fn run(_uart: Uart<'static>) {
     println!("UART task started");
