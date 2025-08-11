@@ -31,9 +31,14 @@ async fn main(spawner: Spawner) {
 
     esp_alloc::heap_allocator!(size: 64 * 1024);
 
-    let uart = tasks::uart::Uart {
-        uart: peripherals.UART0
-    };
+    // let uart = static_cell::StaticCell::new().init_with(tasks::uart::Uart {
+    //     uart: peripherals.UART0
+    // });
+
+    // let uart = static_cell::StaticCell::new().init_with(tasks::uart::Uart {
+    //     uart: peripherals.UART0
+    // });
+
     let wifi = tasks::wifi::Wifi {
         radio: peripherals.WIFI,
         timg0: peripherals.TIMG0,
@@ -42,7 +47,7 @@ async fn main(spawner: Spawner) {
     };
 
     // Spawn all tasks
-    spawner.spawn(tasks::uart::init(uart)).unwrap();
+    //spawner.spawn(tasks::uart::init(uart)).unwrap();
     // spawner.spawn(tasks::uart::run(uart)).unwrap();
 
     spawner.spawn(tasks::wifi::init(wifi)).unwrap();
