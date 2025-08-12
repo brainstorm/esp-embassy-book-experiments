@@ -1,18 +1,28 @@
 use esp_println::println;
-use esp_hal::peripherals;
+use esp_hal::{assign_resources, peripherals};
 use esp_hal::timer::systimer::SystemTimer;
 use esp_hal::timer::timg::TimerGroup;
 use esp_radio_preempt_baremetal;
 
-pub struct Wifi<'a> {
-    pub radio: peripherals::WIFI<'a>,
-    pub timg0: peripherals::TIMG0<'a>,
-    pub rng: peripherals::RNG<'a>,
-    pub systimer: peripherals::SYSTIMER<'a>,
+assign_resources! {
+    Resources<'d> {
+        wifi: WifiResources<'d> {
+            radio: WIFI,
+            timg0: TIMG0,
+            rng: RNG,
+            systimer: SYSTIMER,
+        },
+    }
 }
+// pub struct Wifi<'a> {
+//     pub radio: peripherals::WIFI<'a>,
+//     pub timg0: peripherals::TIMG0<'a>,
+//     pub rng: peripherals::RNG<'a>,
+//     pub systimer: peripherals::SYSTIMER<'a>,
+// }
 
 #[embassy_executor::task()]
-pub async fn init(wifi: Wifi<'static>) {
+pub async fn init(wifi: WifiResources<'static>) {
     println!("Wifi initialization started");
 
     let timg0 = TimerGroup::new(wifi.timg0);
@@ -28,6 +38,6 @@ pub async fn init(wifi: Wifi<'static>) {
 }
 
 #[embassy_executor::task()]
-pub async fn run(_wifi: Wifi<'static>) {
+pub async fn run(_wifi: WifiResources<'static>) {
     println!("Wifi task started");
 }

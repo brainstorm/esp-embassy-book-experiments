@@ -12,7 +12,6 @@ use esp_hal::{assign_resources, clock::CpuClock};
 use esp_hal_embassy;
 use esp_embassy_channels::tasks;
 
-
 #[panic_handler]
 fn panic(_: &core::panic::PanicInfo) -> ! {
     loop {}
@@ -34,37 +33,21 @@ async fn main(spawner: Spawner) {
 
     //let uart = static_cell::StaticCell::new();
 
-    // FIXME: This macro seems to be aimed at AnyPin instead of the alternative pin types below?
-    //
-    // assign_resources! {
-    //     Resources<'d> {
-    //         uart: UartResources<'d> {
-    //             uart0: peripherals.UART0,
-    //         },
-    //         wifi: WifiResources<'d> {
-    //             radio: peripherals.WIFI,
-    //             timg0: peripherals.TIMG0,
-    //             rng: peripherals.RNG,
-    //             systimer: peripherals.SYSTIMER,
-    //         },
-    //     }
-    // }
+    // let uart = tasks::uart::Uart {
+    //     uart: peripherals.UART0
+    // };
 
-    let uart = tasks::uart::Uart {
-        uart: peripherals.UART0
-    };
-
-    let wifi = tasks::wifi::Wifi {
-        radio: peripherals.WIFI,
-        timg0: peripherals.TIMG0,
-        rng: peripherals.RNG,
-        systimer: peripherals.SYSTIMER,
-    };
+    // let wifi = tasks::wifi::Wifi {
+    //     radio: peripherals.WIFI,
+    //     timg0: peripherals.TIMG0,
+    //     rng: peripherals.RNG,
+    //     systimer: peripherals.SYSTIMER,
+    // };
 
     // Spawn all tasks
     spawner.spawn(tasks::uart::init(uart)).unwrap();
-    //spawner.spawn(tasks::uart::run(uart)).unwrap();
+    spawner.spawn(tasks::uart::run(uart)).unwrap();
 
     spawner.spawn(tasks::wifi::init(wifi)).unwrap();
-    // spawner.spawn(tasks::wifi::run(wifi)).unwrap();
+    spawner.spawn(tasks::wifi::run(wifi)).unwrap();
 }
