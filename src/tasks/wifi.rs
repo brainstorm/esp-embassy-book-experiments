@@ -2,7 +2,7 @@ use esp_println::println;
 use esp_hal::peripherals;
 use esp_hal::timer::systimer::SystemTimer;
 use esp_hal::timer::timg::TimerGroup;
-use esp_radio_preempt_baremetal as _;
+use esp_radio_preempt_baremetal;
 
 pub struct Wifi<'a> {
     pub radio: peripherals::WIFI<'a>,
