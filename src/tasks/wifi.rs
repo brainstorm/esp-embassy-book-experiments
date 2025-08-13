@@ -1,25 +1,43 @@
 use esp_println::println;
-use esp_hal::{assign_resources, peripherals};
+//use esp_hal::{assign_resources, peripherals};
+use esp_hal::peripherals;
 use esp_hal::timer::systimer::SystemTimer;
 use esp_hal::timer::timg::TimerGroup;
 use esp_radio_preempt_baremetal;
 
-assign_resources! {
-    Resources<'d> {
-        wifi: WifiResources<'d> {
-            radio: WIFI,
-            timg0: TIMG0,
-            rng: RNG,
-            systimer: SYSTIMER,
-        },
+// assign_resources! {
+//     Resources<'d> {
+//         wifi: WifiResources<'d> {
+//             radio: WIFI,
+//             timg0: TIMG0,
+//             rng: RNG,
+//             systimer: SYSTIMER,
+//         },
+//     }
+// }
+
+pub struct WifiResources<'a> {
+    pub radio: peripherals::WIFI<'a>,
+    pub timg0: peripherals::TIMG0<'a>,
+    pub rng: peripherals::RNG<'a>,
+    pub systimer: peripherals::SYSTIMER<'a>,
+}
+
+impl<'a> WifiResources<'a> {
+    pub fn new(
+        radio: peripherals::WIFI<'a>,
+        timg0: peripherals::TIMG0<'a>,
+        rng: peripherals::RNG<'a>,
+        systimer: peripherals::SYSTIMER<'a>,
+    ) -> Self {
+        WifiResources {
+            radio,
+            timg0,
+            rng,
+            systimer,
+        }
     }
 }
-// pub struct Wifi<'a> {
-//     pub radio: peripherals::WIFI<'a>,
-//     pub timg0: peripherals::TIMG0<'a>,
-//     pub rng: peripherals::RNG<'a>,
-//     pub systimer: peripherals::SYSTIMER<'a>,
-// }
 
 #[embassy_executor::task()]
 pub async fn init(wifi: WifiResources<'static>) {

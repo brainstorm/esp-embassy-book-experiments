@@ -8,9 +8,12 @@
 
 //use embassy_sync::channel::Channel;
 use embassy_executor::Spawner;
-use esp_hal::{assign_resources, clock::CpuClock};
+use esp_hal::clock::CpuClock;
 use esp_hal_embassy;
+
 use esp_embassy_channels::tasks;
+use esp_embassy_channels::tasks::uart::UartResources;
+use esp_embassy_channels::tasks::wifi::WifiResources;
 
 #[panic_handler]
 fn panic(_: &core::panic::PanicInfo) -> ! {
@@ -31,18 +34,13 @@ async fn main(spawner: Spawner) {
 
     esp_alloc::heap_allocator!(size: 64 * 1024);
 
-    //let uart = static_cell::StaticCell::new();
-
-    // let uart = tasks::uart::Uart {
-    //     uart: peripherals.UART0
-    // };
-
-    // let wifi = tasks::wifi::Wifi {
-    //     radio: peripherals.WIFI,
-    //     timg0: peripherals.TIMG0,
-    //     rng: peripherals.RNG,
-    //     systimer: peripherals.SYSTIMER,
-    // };
+    let uart = UartResources::new(peripherals.UART0);
+    let wifi = WifiResources::new(
+        peripherals.WIFI,
+        peripherals.TIMG0,
+        peripherals.RNG,
+        peripherals.SYSTIMER,
+    );
 
     // Spawn all tasks
     spawner.spawn(tasks::uart::init(uart)).unwrap();
