@@ -3,7 +3,7 @@ use esp_println::println;
 use esp_hal::peripherals;
 use esp_hal::timer::systimer::SystemTimer;
 use esp_hal::timer::timg::TimerGroup;
-use esp_radio_preempt_baremetal;
+use esp_preempt;
 
 // assign_resources! {
 //     Resources<'d> {
@@ -44,7 +44,7 @@ pub async fn init(wifi: WifiResources<'static>) {
     println!("Wifi initialization started");
 
     let timg0 = TimerGroup::new(wifi.timg0);
-    esp_radio_preempt_baremetal::init(timg0.timer0);
+    esp_preempt::init(timg0.timer0);
 
     let timer0 = SystemTimer::new(wifi.systimer);
     esp_hal_embassy::init(timer0.alarm0);

@@ -44,8 +44,8 @@ async fn main(spawner: Spawner) {
 
     // Spawn all tasks
     spawner.spawn(tasks::uart::init(uart)).unwrap();
-    spawner.spawn(tasks::uart::run(uart)).unwrap();
+//  spawner.spawn(tasks::uart::run(uart)).unwrap();
 
     spawner.spawn(tasks::wifi::init(wifi)).unwrap();
-    spawner.spawn(tasks::wifi::run(wifi)).unwrap();
+//    spawner.spawn(tasks::wifi::run(wifi)).unwrap();
 }
